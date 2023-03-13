@@ -9,3 +9,11 @@
 #include<stack>
 #include<iostream>
 using namespace std;
+class Reader{
+    private:
+    public:
+        Reader(){
+
+        }
+
+};
