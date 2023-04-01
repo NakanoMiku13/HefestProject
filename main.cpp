@@ -1,9 +1,9 @@
 #include "Algebra.h"
 using namespace std;
 auto main()->int{
-    string variable = "2x^2";
-    cout<<variable<<endl;
-    auto t = getSingleEquationPower(variable);
-    cout<<t.first<<" "<<t.second<<" "<<t.third<<endl;
+    string variable = "2x^2", var2 = "6x^2";
+    cout<<variable<<" + "<<var2<<endl;
+    string result = addition(variable,var2);
+    cout<<result;
     return 0;
 }

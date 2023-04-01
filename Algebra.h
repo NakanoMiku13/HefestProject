@@ -11,7 +11,7 @@
 #include<string>
 #define isNumber (int)i >= 48 && i <= (int)57
 #define isVariable ((int)i >= 65 && i <= (int)90) or ((int)i >= 97 && (int)i <= 121)
-#define isSymbol (int)i == 43 or (int)i == 47 or (int)i == 45 or (int)i == 42 or (int)i == 94
+#define isSymbol (int)i == 43 or (int)i == 47 or (int)i == 45 or (int)i == 42
 using namespace std;
 class AlgebraException{
     public:
@@ -220,7 +220,6 @@ auto getSingleEquationPower(string equation)->shortList<int,string,int>{
 //Function that make the addition of two variables
 auto addition(string first,string second)->string{
     try{
-
         if(isComplexEquation(first) or isComplexEquation(second)) throw AlgebraException(8);
         string variableA = getVariable(first), variableB = getVariable(second);
         int constantA = getConstant(first), constantB = getConstant(second), powerA = 0, powerB = 0;
@@ -234,7 +233,7 @@ auto addition(string first,string second)->string{
             powerB = sec.third;
         }
         return (isPower(first) && isPower(second)) ? (
-            (variableA == variableB && powerA == powerB) ? "(" + to_string(constantA + constantB) + variableA + ")" : "(" + first + ")+(" + second + ")" 
+            (variableA == variableB && powerA == powerB) ? "(" + to_string(constantA + constantB) + variableA + "^"+to_string(powerA)+")" : "(" + first + ")+(" + second + ")"
         ) : (variableA == variableB) ? "(" + to_string(constantA + constantB) + variableA + ")" : "(" + first + ")+(" + second + ")";
     }catch(AlgebraException exception){
         cout<<exception.getException()<<endl;
@@ -246,8 +245,19 @@ auto difference(string first,string second)->string{
     try{
         if(isComplexEquation(first) or isComplexEquation(second)) throw AlgebraException(8);
         string variableA = getVariable(first), variableB = getVariable(second);
-        int constantA = getConstant(first), constantB = getConstant(second);
-        return (variableA == variableB) ? "(" + to_string(constantA - constantB) + variableA + ")" : "(" + first + ")-(" + second + ")";
+        int constantA = getConstant(first), constantB = getConstant(second), powerA = 0, powerB = 0;
+        if(isPower(first) && isPower(second)){
+            shortList<int,string,int> fir = getSingleEquationPower(first),sec = getSingleEquationPower(second);
+            variableA = fir.second;
+            variableB = sec.second;
+            constantB = sec.first;
+            constantA = fir.first;
+            powerA = fir.third;
+            powerB = sec.third;
+        }
+        return (isPower(first) && isPower(second)) ? (
+            (variableA == variableB && powerA == powerB) ? "(" + to_string(constantA - constantB) + variableA + "^"+to_string(powerA)+")" : "(" + first + ")-(" + second + ")"
+        ) : (variableA == variableB) ? "(" + to_string(constantA - constantB) + variableA + ")" : "(" + first + ")-(" + second + ")";
     }catch(AlgebraException exception){
         cout<<exception.getException()<<endl;
         return "0";
@@ -258,8 +268,19 @@ auto product(string first,string second)->string{
     try{
         if(isComplexEquation(first) or isComplexEquation(second)) throw AlgebraException(8);
         string variableA = getVariable(first), variableB = getVariable(second);
-        int constantA = getConstant(first), constantB = getConstant(second);
-        return (variableA == variableB) ? "(" + to_string(constantA * constantB) + variableA + ")" : "(" + first + ")+(" + second + ")";
+        int constantA = getConstant(first), constantB = getConstant(second), powerA = 0, powerB = 0;
+        if(isPower(first) && isPower(second)){
+            shortList<int,string,int> fir = getSingleEquationPower(first),sec = getSingleEquationPower(second);
+            variableA = fir.second;
+            variableB = sec.second;
+            constantB = sec.first;
+            constantA = fir.first;
+            powerA = fir.third;
+            powerB = sec.third;
+        }
+        return (isPower(first) && isPower(second)) ? (
+            (variableA == variableB) ? "(" + to_string(constantA * constantB) + variableA + "^"+to_string(powerA + powerB)+")" : "(" + first + ")+(" + second + ")"
+        ) : (variableA == variableB) ? "(" + to_string(constantA * constantB) + variableA + "^2)" : "(" + first + ")+(" + second + ")";
     }catch(AlgebraException exception){
         cout<<exception.getException()<<endl;
         return "0";
@@ -270,8 +291,23 @@ auto division(string first,string second)->string{
     try{
         if(isComplexEquation(first) or isComplexEquation(second)) throw AlgebraException(8);
         string variableA = getVariable(first), variableB = getVariable(second);
-        int constantA = getConstant(first), constantB = getConstant(second);
-        return (variableA == variableB) ? "(" + to_string(constantA + constantB) + variableA + ")" : "(" + first + ")+(" + second + ")";
+        int constantA = getConstant(first), constantB = getConstant(second), powerA = 0, powerB = 0;
+        if(isPower(first) && isPower(second)){
+            shortList<int,string,int> fir = getSingleEquationPower(first),sec = getSingleEquationPower(second);
+            variableA = fir.second;
+            variableB = sec.second;
+            constantB = sec.first;
+            constantA = fir.first;
+            powerA = fir.third;
+            powerB = sec.third;
+        }
+        return (isPower(first) && isPower(second)) ? (
+            (variableA == variableB) ?
+                ((powerA != powerB) ?
+                    ("(" + to_string(constantA / constantB) + variableA + "^" +to_string(powerA - powerB)+")") :
+                    "(" + to_string(constantA / constantB) + ")") :
+                "(" + first + ")/(" + second + ")"
+        ) : (variableA == variableB) ? "(" + to_string(constantA / constantB) + ")" : "(" + first + ")/(" + second + ")";
     }catch(AlgebraException exception){
         cout<<exception.getException()<<endl;
         return "0";
